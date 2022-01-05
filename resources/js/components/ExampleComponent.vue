@@ -5,8 +5,10 @@
       <p>{{ post.body }}</p>
     </ul> -->
     <div>
-        <button class="btn btn-primary" v-on:click="getData">Get Data</button>
-        <div v-for="post in posts" v-bind:key="post.id">
+        <!-- <button class="btn btn-primary" v-on:click="getData">Get Data</button> -->
+        <button class="btn btn-primary" v-on:click="getUser">Fetch</button>
+        <!-- <button class="btn btn-primary" v-on:click="postUser">Post User</button> -->
+        <div v-for="post in posts" v-bind:key="post._id">
             <!-- <h2>{{ post.name }}</h2>
             <p>{{ post.email }}</p> -->
             <ul class="list-group">
@@ -14,15 +16,15 @@
                     {{ post.name }}
                     <div>
 
-                    <button class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#exampleModal'+post.id">Info</button>
-                    <button class="btn btn-danger" @click="del(post.id)">Delete</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#exampleModal'+post._id">Info</button>
+                    <button class="btn btn-danger" @click="del(post._id)">Delete</button>
                     </div>
                 </li>
             </ul>
 
                 <!-- Modal -->
-                <div class="modal fade" :id="'exampleModal'+ post.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal fade" :id="'exampleModal'+ post._id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Details</h5>
@@ -41,7 +43,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">{{post.id}}</th>
+                                    <th scope="row">{{post._id}}</th>
                                     <td>{{post.email}}</td>
                                     <td>{{post.gender}}</td>
                                     <td>{{post.name}}</td>
@@ -74,27 +76,65 @@
             async getData() {
                 try {
                     const response = await this.$http.get(
-                        "https://gorest.co.in/public/v1/users"
+                        "http://127.0.0.1:8000/api/api-user"
                     );
                     // JSON responses are automatically parsed.
-                    this.posts = response.data.data;
+                    this.posts = response.data;
                     // console.log(this.posts);
                 } catch (error) {
                     console.log(error);
                 }
             },
+            async getUser() {
+                try {
+                    const response = await this.$http.get(
+                        "https://gorest.co.in/public/v1/users"
+                    );
+                    // JSON responses are automatically parsed.
+                    // this.posts = response.data.data;
+                    this.postUser(response.data.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            async postUser(data) {
+                const token = '33be5059cfb02e82451d3c850e1ca48e8a12ee6727ad51fc7a7d2b680eb0d15d'
+                // const url = `https://gorest.co.in/public/v1/users`
+                const url = `http://127.0.0.1:8000/api/api-user`
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
+
+                const response = await axios.post(url,
+                    data,
+                    config
+                )
+                .then(function (response) {
+                        // console.log(response);
+                        location.reload();
+                    })
+                    .catch(function (error) {
+                        console.log(data);
+                    });
+            },
             async del(id) {
                 const token = '33be5059cfb02e82451d3c850e1ca48e8a12ee6727ad51fc7a7d2b680eb0d15d'
-                const url = `https://gorest.co.in/public/v1/users/${id}`
-                const response = await axios.delete(url, {
+                const url = `http://127.0.0.1:8000/api/api-user/${id}`
+                const response = await axios.put(url, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
-                });
-                if(response){
-                    this.getData();
-                }
+                })
+                .then(function (response) {
+                        location.reload();
+                    })
+                    .catch(function (error) {
+                        console.log(data);
+                    });
             },
+        },
+        created() {
+            this.getData();
         },
     };
 </script>

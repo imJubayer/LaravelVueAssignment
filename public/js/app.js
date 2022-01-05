@@ -5451,6 +5451,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -5472,12 +5474,12 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return _this.$http.get("https://gorest.co.in/public/v1/users");
+                return _this.$http.get("http://127.0.0.1:8000/api/api-user");
 
               case 3:
                 response = _context.sent;
                 // JSON responses are automatically parsed.
-                _this.posts = response.data.data; // console.log(this.posts);
+                _this.posts = response.data; // console.log(this.posts);
 
                 _context.next = 10;
                 break;
@@ -5495,39 +5497,110 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
         }, _callee, null, [[0, 7]]);
       }))();
     },
-    del: function del(id) {
+    getUser: function getUser() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var token, url, response;
+        var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                token = '33be5059cfb02e82451d3c850e1ca48e8a12ee6727ad51fc7a7d2b680eb0d15d';
-                url = "https://gorest.co.in/public/v1/users/".concat(id);
-                _context2.next = 4;
-                return axios["delete"](url, {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _this2.$http.get("https://gorest.co.in/public/v1/users");
 
-              case 4:
+              case 3:
                 response = _context2.sent;
 
-                if (response) {
-                  _this2.getData();
-                }
+                // JSON responses are automatically parsed.
+                // this.posts = response.data.data;
+                _this2.postUser(response.data.data);
 
-              case 6:
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 10:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[0, 7]]);
+      }))();
+    },
+    postUser: function postUser(data) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var token, url, config, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                token = '33be5059cfb02e82451d3c850e1ca48e8a12ee6727ad51fc7a7d2b680eb0d15d'; // const url = `https://gorest.co.in/public/v1/users`
+
+                url = "http://127.0.0.1:8000/api/api-user";
+                config = {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                };
+                _context3.next = 5;
+                return axios.post(url, data, config).then(function (response) {
+                  // console.log(response);
+                  location.reload();
+                })["catch"](function (error) {
+                  console.log(data);
+                });
+
+              case 5:
+                response = _context3.sent;
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    del: function del(id) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        var token, url, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                token = '33be5059cfb02e82451d3c850e1ca48e8a12ee6727ad51fc7a7d2b680eb0d15d';
+                url = "http://127.0.0.1:8000/api/api-user/".concat(id);
+                _context4.next = 4;
+                return axios.put(url, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                }).then(function (response) {
+                  location.reload();
+                })["catch"](function (error) {
+                  console.log(data);
+                });
+
+              case 4:
+                response = _context4.sent;
+
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
       }))();
     }
+  },
+  created: function created() {
+    this.getData();
   }
 });
 
@@ -29167,12 +29240,12 @@ var render = function () {
       [
         _c(
           "button",
-          { staticClass: "btn btn-primary", on: { click: _vm.getData } },
-          [_vm._v("Get Data")]
+          { staticClass: "btn btn-primary", on: { click: _vm.getUser } },
+          [_vm._v("Fetch")]
         ),
         _vm._v(" "),
         _vm._l(_vm.posts, function (post) {
-          return _c("div", { key: post.id }, [
+          return _c("div", { key: post._id }, [
             _c("ul", { staticClass: "list-group" }, [
               _c(
                 "li",
@@ -29193,7 +29266,7 @@ var render = function () {
                         staticClass: "btn btn-primary",
                         attrs: {
                           "data-bs-toggle": "modal",
-                          "data-bs-target": "#exampleModal" + post.id,
+                          "data-bs-target": "#exampleModal" + post._id,
                         },
                       },
                       [_vm._v("Info")]
@@ -29205,7 +29278,7 @@ var render = function () {
                         staticClass: "btn btn-danger",
                         on: {
                           click: function ($event) {
-                            return _vm.del(post.id)
+                            return _vm.del(post._id)
                           },
                         },
                       },
@@ -29221,14 +29294,14 @@ var render = function () {
               {
                 staticClass: "modal fade",
                 attrs: {
-                  id: "exampleModal" + post.id,
+                  id: "exampleModal" + post._id,
                   tabindex: "-1",
                   "aria-labelledby": "exampleModalLabel",
                   "aria-hidden": "true",
                 },
               },
               [
-                _c("div", { staticClass: "modal-dialog" }, [
+                _c("div", { staticClass: "modal-dialog modal-lg" }, [
                   _c("div", { staticClass: "modal-content" }, [
                     _vm._m(0, true),
                     _vm._v(" "),
@@ -29239,7 +29312,7 @@ var render = function () {
                         _c("tbody", [
                           _c("tr", [
                             _c("th", { attrs: { scope: "row" } }, [
-                              _vm._v(_vm._s(post.id)),
+                              _vm._v(_vm._s(post._id)),
                             ]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(post.email))]),
